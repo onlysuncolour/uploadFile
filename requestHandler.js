@@ -25,11 +25,15 @@ function main(response) {
   })
 }
 
+function setCookie (username, cookie) {
+  
+}
+
 function userLogin(response, request, postData) {
   var user = getUserFromPostData(postData);
   if (!!users[user.username] && !!user.password && users[user.username] == user.password) {
     fs.readFile('upload.html', function(err, data) {
-      response.writeHead(200,{"Content-Type": 'text/html'});
+      response.writeHead(200,{"Content-Type": 'text/html', "Set-Cookie": "session=E1f3Vo"});
       response.end(data)
     })
   } else {

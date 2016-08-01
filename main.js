@@ -9,9 +9,9 @@ $(function() {
 })
 
 var isLogined = false;
-if (location.pathname != '/login') {//
-  location.href = 'login'
-}
+// if (location.pathname != '/login') {//
+//   location.href = 'login'
+// }
 console.log(isLogined)
 
 var user = {
