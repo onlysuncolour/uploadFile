@@ -1,25 +1,29 @@
 <!doctype html>
 <html lang='en'>
   <head>
-    <title> 上传文件</title>
+    <title> 上传报表</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <script type="text/javascript" src="jquery.min.js"></script>
-    <script type="text/javascript" src="main.js"></script>
+    <script type="text/javascript" src="login.js"></script>
   </head>
 
   <body>
       <div>
+        <h1 style="text-align: center;"> 总裁决策系统上传报表 </h1>
+        <h3 style="text-align: center;"> 请登录 </h3>
+      </div>
+      <div style="text-align: center;padding-top: 40px;">
         <label> 请输入用户名: </label>
         <input type="text" id="username">
       </div>
-      <div>
-        <label> 请输入密码: </label>
+      <div style="text-align: center;">
+        <label> 请输入密码: &nbsp;&nbsp;</label>
         <input type="password" id="password">
       </div>
-      <div>
+      <div style="text-align: center; padding-top: 20px;">
         <input type="checkbox" id="remember">
-        <span> 记住用户名密码</span>
-        <input type="button" value="登陆" onclick="login()"/>
+        <span> 记住密码</span>
+        <input type="button" value="登陆" onclick="login()" style="margin-left: 90px;"/>
       </div>
   </body>
 </html>

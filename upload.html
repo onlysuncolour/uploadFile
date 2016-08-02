@@ -4,12 +4,15 @@
     <title> 上传文件</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
     <script type="text/javascript" src="jquery.min.js"></script>
-    <script type="text/javascript" src="main.js"></script>
+    <script type="text/javascript" src="upload.js"></script>
   </head>
   <body>
-    <form id="uploadForm">
+    <div>
+      <h1 style="text-align: center;"> 总裁决策系统上传报表 </h1>
+    </div>
+    <form id="uploadForm" style="text-align:center; margin-top: 40px;">
       <span> 报表日期: </span>
-      <select name="year" id="year">
+      <select name="year" id="year" style="font-size: 17px;">
         <option value="2016" selected="selected"> 2016 </option>
         <option value="2015"> 2015 </option>
         <option value="2014"> 2014 </option>
@@ -17,7 +20,7 @@
         <option value="2012"> 2012 </option>
       </select>
       <span> 年 </span>
-      <select name="month" id="month">
+      <select name="month" id="month" style="font-size: 17px;">
         <option value="01" selected="selected"> 1 </option>
         <option value="02">  2 </option>
         <option value="03">  3 </option>
@@ -32,13 +35,13 @@
         <option value="12"> 12 </option>
       </select>
       <span> 月 &nbsp;&nbsp;&nbsp;</span>
-      <input type="file" name="fileName" multiple="multiple" id="fileName" accept="application/pdf">
-      <input type="button" value="上传报表" onclick="upload()"/>
+      <input type="file" name="fileName" multiple="multiple" id="fileName" accept="application/pdf" style="display: block; margin: auto; font-size: 17px; padding-left: 140px; padding-top: 10px;">
+      <input type="button" value="上传报表" onclick="upload()" style="font-size: 17px; margin-top: 10px;"/>
     </form>
-    <div id="showMessage">
+    <div id="showMessage" style="margin-top: 20px; text-align: center; color: red;">
 
     </div>
-    <div id="fileList">
+    <div id="fileList" style="margin-left: 30px;">
 
     </div>
 

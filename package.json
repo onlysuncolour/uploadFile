@@ -1,0 +1,11 @@
+{
+  "name": "uploadFile",
+  "version": "0.0.1",
+  "repository": {
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "formidable": "*",
+    "q": "*"
+  }
+}

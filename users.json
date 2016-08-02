@@ -1,4 +1,10 @@
 {
-  "hello": "123456",
-  "test": "123456"
+    "hello": {
+        "password": "123456"
+    },
+    "test": {
+        "password": "123456",
+        "cookies": "USER=test; SESSION=65782147012019741285374",
+        "cookie": "19115147012405529718647"
+    }
 }
