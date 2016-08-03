@@ -10,5 +10,6 @@ handle["/showList"] = requestHandlers.showList;
 handle["/unlinkFile"] = requestHandlers.unlinkFile;
 handle["/userLogin"] = requestHandlers.userLogin;
 handle["/checkLogin"] = requestHandlers.checkLogin;
+handle["/changePassword"] = requestHandlers.changePassword;
 handle["/other"] = requestHandlers.getFile;
 server.start(router.route, handle);

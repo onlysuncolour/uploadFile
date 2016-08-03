@@ -7,6 +7,29 @@
     <script type="text/javascript" src="upload.js"></script>
   </head>
   <body>
+    <div style="position: fixed; right: 250px;">
+      <div>
+        <button type="button" name="button" style="float: right; display: none;" onclick="showManageUsers()" id="manageUsersButton">管理用户</button>
+        <button type="button" name="button" style="float: right; display: none;" onclick="showChangePassword()" id="changePasswordButton">修改密码</button>
+        <div style="clear: both;">
+        </div>
+      </div>
+      <div style="display: none;" id="changePasswordTab">
+        <span> 原密码: </span>
+        <input type="password" id="password" style="width: 70px;" />
+        <span> 新密码: </span>
+        <input type="password" id="newpassword" style="width: 70px;" />
+        <button type="button" name="button" onclick="changePassword()">修改</button>
+      </div>
+      <div style="display: none;" id="manageUsersTab">
+        <span> 用户名: </span>
+        <input type="text" id="username" style="width: 70px;" />
+        <span> &nbsp;&nbsp;&nbsp;密码: </span>
+        <input type="password" id="upassword" style="width: 70px;" />
+        <button type="button" name="button" onclick="manageUsers()">修改</button>
+      </div>
+
+    </div>
     <div>
       <h1 style="text-align: center;"> 总裁决策系统上传报表 </h1>
     </div>

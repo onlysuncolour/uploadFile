@@ -17,7 +17,7 @@ var user = {
 var login = function() {
   user['username'] = $('#username')[0].value,
   user['password'] = $('#password')[0].value;
-  if (user['username'] == null || user['username'] == undefined || user['password'] == null || user['password'] == undefined) {
+  if (!user['username'] == null || !user['password'] == undefined) {
     alert('请输入完整的用户名、密码！');
     return;
   }
@@ -30,6 +30,7 @@ var login = function() {
     type: 'POST',
     data: user,
     success: function(data) {
+      // debugger;
       location.href = 'main'
     },
     error: function(err) {

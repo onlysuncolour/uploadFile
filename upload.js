@@ -67,7 +67,7 @@ var getFileList = function() {
       $('#fileList').append('</ul>' );
     },
     error: function(err) {
-      debugger;
+      // debugger;
       alert(err);
     }
   })
@@ -84,7 +84,6 @@ var unlinkFile = function(fileName) {
         showMessage("删除文件成功！");
       } else {
         showMessage("删除文件失败，请重试");
-
       }
     },
     error : function(err) {
@@ -94,11 +93,18 @@ var unlinkFile = function(fileName) {
 }
 
 var checkLogin = function() {
+  // debugger;
   $.ajax({
     url: '/checkLogin',
     type: 'GET',
     success: function(data) {
+      // debugger;
       if (data.success) {
+        if (data.username == 'root') {
+          $('#manageUsersButton').css('display', 'block');
+        } else {
+          $('#changePasswordButton').css('display', 'block');
+        }
         getFileList();
       } else {
         location.href = 'login'
@@ -106,6 +112,66 @@ var checkLogin = function() {
     },
     error : function(err) {
       location.href = 'login'
+    }
+  })
+}
+
+var showChangePassword = function() {
+  var changePasswordTab = $('#changePasswordTab')[0];
+  if (changePasswordTab.style.display == 'none') {
+    $('#changePasswordTab').css('display', 'block');
+  } else {
+    $('#changePasswordTab').css('display', 'none');
+  }
+}
+
+var showManageUsers = function() {
+  var manageUsersTab = $('#manageUsersTab')[0];
+  if (manageUsersTab.style.display == 'none') {
+    $('#manageUsersTab').css('display', 'block');
+  } else {
+    $('#manageUsersTab').css('display', 'none');
+  }
+}
+
+var changePassword = function () {
+  var passwords = {};
+  passwords['password'] = $('#password')[0].value,
+  passwords['newpassword'] = $('#newpassword')[0].value;
+  if (!passwords['password'] == null || !passwords['newpassword'] == undefined) {
+    alert('请输入完整的原密码，新密码！');
+    return;
+  }
+  $.ajax({
+    url: '/changePassword',
+    type: 'POST',
+    data: passwords,
+    success: function(data) {
+      alert('操作成功')
+    },
+    error: function(err) {
+      alert('操作失败');
+    }
+  })
+}
+
+var manageUsers = function () {
+  var user = {}
+  user['username'] = $('#username')[0].value,
+  user['upassword'] = $('#upassword')[0].value;
+  if (!user['username'] == null || !user['upassword'] == undefined) {
+    alert('请输入完整的用户名、密码！');
+    return;
+  }
+  $.ajax({
+    url: '/manageUsers',
+    type: 'POST',
+    data: user,
+    success: function(data) {
+      alert('操作成功')
+    },
+    error: function(err) {
+      alert('操作失败');
     }
   })
 }

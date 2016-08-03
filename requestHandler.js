@@ -20,27 +20,33 @@ function login(response) {
 }
 
 function checkLogin(response, request) {
-  console.log(1);
   var cookies = getCookies(request);
-  console.log(1);
+  var users = getUsers();
+  if (checkSession(cookies, users)) {
+    response.writeHead(200,{"Content-Type": "application/json"});
+    response.write(JSON.stringify({
+      success: true,
+      username: cookies.USER})
+    );
+    response.end();
+  } else {
+    response.writeHead(200,{"Content-Type": "application/json"});
+    response.write('{"success": false}');
+    response.end();
+  }
+}
+
+function checkSession(cookies, users) {
   if (!!cookies && !!cookies.USER && !!cookies.SESSION) {
-    console.log(2)
-    var users = getUsers();
     if (users[cookies.USER].cookie == cookies.SESSION) {
       var sessionDate = +cookies.SESSION.substring(5,18);
       var date = new Date();
       date.setDate(date.getDate()-1);
       if (sessionDate > date.getTime()) {
-        response.writeHead(200,{"Content-Type": "application/json"});
-        response.write('{"success": true}');
-        response.end();
         return true
       }
     }
   }
-  response.writeHead(200,{"Content-Type": "application/json"});
-  response.write('{"success": false}');
-  response.end();
   return false;
 }
 
@@ -54,10 +60,19 @@ function main(response) {
 function setCookie (username) {
   var users = getUsers();
   var user = users[username];
-  user.cookie = (parseInt(Math.random()*100000) + "") + (new Date().getTime() + "") + (parseInt(Math.random()*100000) + "")
+  user.cookie = getRandom() + (new Date().getTime() + "") + getRandom();
   var cookies = ["USER=" + username + "; " , "SESSION=" + user.cookie + "; "];
   exportUsers(users);
   return cookies;
+}
+
+function getRandom () {
+  var random = parseInt(Math.random()*100000);
+  if (random < 10000) {
+    return getRandom();
+  } else {
+    return (random + "");
+  }
 }
 
 function userLogin(response, request, postData) {
@@ -65,8 +80,9 @@ function userLogin(response, request, postData) {
     users = getUsers();
   if (!!users[user.username] && !!user.password && users[user.username].password == user.password) {
     var cookie = setCookie(user.username);
+    // console.log(cookie);
     fs.readFile('upload.html', function(err, data) {
-      response.writeHead(200,{"Content-Type": 'text/html', "Set-Cookie": cookie[0], "Set-Cookie": cookie[1]});
+      response.writeHead(200,{"Content-Type": 'text/html', "Set-Cookie": cookie});
       response.end(data)
     })
   } else {
@@ -153,51 +169,53 @@ var makeObjectFromGet = function(url, urlBase) {
 }
 
 var changePassword = function(response, request, postData) {
-  var user = getUserFromPostData(postData);
+  var cookies = getCookies(request);
   var users = getUsers();
-  if (users[user.username] == null || users[user.username] == undefined) {
-    response.writeHead(200,{"Content-Type": "application/json"});
-    response.write('{"success": false}');
-    response.end();
-    return;
+  if (checkSession(cookies, users) && cookies.USER == 'root') {
+    var passwords = getObjFromPostData(postData);
+    // console.log(passwords);
+    if (users[cookies.USER].password == passwords.password) {
+      users[cookies.USER].password = passwords.newpassword;
+      exportUsers(users).then(function() {
+        response.writeHead(200,{"Content-Type": "application/json"});
+        response.write('{"success": false}');
+        response.end();
+      }, function() {
+        response.writeHead(200,{"Content-Type": "application/json"});
+        response.write('{"success": true}');
+        response.end();
+      })
+      return;
+    }
   }
-  users[user.username].password = user.password;
-  var promise = exportUsers(users);
-  promise.then(function() {
-    response.writeHead(200,{"Content-Type": "application/json"});
-    response.write('{"success": false}');
-    response.end();
-  }, function() {
-    response.writeHead(200,{"Content-Type": "application/json"});
-    response.write('{"success": true}');
-    response.end();
-  })
+  response.writeHead(200,{"Content-Type": "application/json"});
+  response.write('{"success": false}');
+  response.end();
+  return;
 }
 
-var addUser = function(response, request, postData) {
-  var user = getUserFromPostData(postData);
-  if (!!users[user.username]) {
-    response.writeHead(200,{"Content-Type": "application/json"});
-    response.write('{"success": false, "reason": "username existed!"}');
-    response.end();
-    return
-  } else {
-    var users = getUsers();
-    users[user.username].password = user.password;
-
-    var promise = exportUsers(users);
-    promise.then(function() {
-      var users = getUsers();
+var manageUser = function(response, request, postData) {
+  var cookies = getCookies(request);
+  var users = getUsers();
+  if (checkSession(cookies, users)) {
+    var changedUser = getObjFromPostData(postData);
+    users[changedUser.username] = {};
+    users[changedUser.username].password = changedUser.upassword;
+    exportUsers(users).then(function() {
       response.writeHead(200,{"Content-Type": "application/json"});
-      response.write('{"success": false, "reason": "TRY AGAIN!"}');
+      response.write('{"success": false}');
       response.end();
     }, function() {
-      users = getUsers();
       response.writeHead(200,{"Content-Type": "application/json"});
       response.write('{"success": true}');
       response.end();
     })
+    return;
   }
+  response.writeHead(200,{"Content-Type": "application/json"});
+  response.write('{"success": false}');
+  response.end();
+  return;
 }
 
 var exportUsers = function(users) {
@@ -210,8 +228,8 @@ var exportUsers = function(users) {
       users = getUsers();
       defer.resolve();
     }
-    return defer.promise;
   });
+  return defer.promise;
 }
 
 var getUserFromPostData = function(postData) {
@@ -222,6 +240,16 @@ var getUserFromPostData = function(postData) {
     user[decodeURIComponent(postData[i].split("=")[0])] = decodeURIComponent(postData[i].split("=")[1]);
   };
   return user;
+}
+
+var getObjFromPostData = function(postData) {
+  var obj = {};
+  var splitCh = postData.indexOf('+&') == -1 ? "&" : "+&";
+  postData = postData.split(splitCh);
+  for (var i = 0; i < postData.length; i++) {
+    obj[decodeURIComponent(postData[i].split("=")[0])] = decodeURIComponent(postData[i].split("=")[1]);
+  };
+  return obj;
 }
 
 var getCookies = function(request) {
