@@ -97,8 +97,8 @@ function upload(response, request) {
   var form = new formidable.IncomingForm();
   form.uploadDir=tempPath;
   form.parse(request, function(error, fields, files) {
+    fileName = fields.year + "年" + fields.month + "月";
     fs.unlink(filePath+fileName+".pdf", function(err) {
-      fileName = fields.year + "年" + fields.month + "月";
       fs.renameSync(files.fileName.path, filePath+fileName+".pdf", function(err) {
         response.writeHead(200,{"Content-Type": "application/json"});
         response.write('{"success": false}');

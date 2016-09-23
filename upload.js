@@ -19,9 +19,13 @@ var changePassword = function() {
 }
 
 var upload = function() {
+  if(!$("#fileName")[0].value) {
+    alert("请选择文件")
+    return
+  }
   var formData = new FormData($( "#uploadForm" )[0]);
    $.ajax({
-        url: '/upload' ,
+        url: '/upload',
         type: 'POST',
         data: formData,
         async: false,
@@ -67,7 +71,6 @@ var getFileList = function() {
       $('#fileList').append('</ul>' );
     },
     error: function(err) {
-      // debugger;
       alert(err);
     }
   })
@@ -82,6 +85,7 @@ var unlinkFile = function(fileName) {
     success: function(data) {
       if (data.success) {
         showMessage("删除文件成功！");
+        getFileList()
       } else {
         showMessage("删除文件失败，请重试");
       }
@@ -98,7 +102,6 @@ var checkLogin = function() {
     url: '/checkLogin',
     type: 'GET',
     success: function(data) {
-      // debugger;
       if (data.success) {
         if (data.username == 'root') {
           $('#manageUsersButton').css('display', 'block');
